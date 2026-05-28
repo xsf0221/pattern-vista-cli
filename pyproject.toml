@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pattern-vista"
+version = "0.1.0"
+description = "Command-line access to Pattern Vista: K-line pattern win-rates and MA200 deviation rankings, built for AI agents and humans."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Pattern Vista" }]
+keywords = ["trading", "stocks", "technical-analysis", "patterns", "agent", "cli"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Environment :: Console",
+    "Intended Audience :: Financial and Insurance Industry",
+]
+dependencies = [
+    "click>=8.1",
+    "requests>=2.28",
+]
+
+[project.urls]
+Homepage = "https://www.pattern-vista.com"
+Documentation = "https://www.pattern-vista.com/posts"
+
+[project.scripts]
+pv = "pattern_vista.cli:main"
+pattern-vista = "pattern_vista.cli:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "responses>=0.23"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pattern_vista"]
