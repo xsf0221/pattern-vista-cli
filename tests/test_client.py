@@ -69,3 +69,42 @@ def test_whoami_unwraps_single_row():
     )
     info = _client().whoami()
     assert info["email"] == "a@b.com" and info["is_billed"] is False
+
+
+@responses.activate
+def test_market_stretch_passes_days_and_returns_payload():
+    responses.add(
+        responses.POST,
+        f"{BASE}/rest/v1/rpc/{constants.RPC_STRETCH}",
+        json={
+            "is_billed": False,
+            "current": {"snapshot_date": "2026-09-04", "pct_above": 0.64, "total": 217},
+            "percentile": 0.81,
+            "history": [{"snapshot_date": "2026-09-03", "pct_above": 0.62}],
+        },
+        status=200,
+    )
+    out = _client().market_stretch(days=30)
+    assert out["current"]["pct_above"] == 0.64
+    assert out["percentile"] == 0.81
+    body = responses.calls[0].request.body.decode()
+    assert '"p_days": 30' in body
+    assert '"p_api_key": "pv_live_testkey"' in body
+
+
+@responses.activate
+def test_market_stretch_free_tier_gets_the_full_series():
+    """Breadth is deliberately not tier-gated: the public /market/stretch page
+    gives the same reading away in full, so truncating it in the agent channel
+    would only make the CLI worse than a browser. The client must therefore
+    pass a free-tier payload straight through rather than trimming it."""
+    history = [{"snapshot_date": f"2026-08-{d:02d}", "pct_above": 0.5} for d in range(1, 21)]
+    responses.add(
+        responses.POST,
+        f"{BASE}/rest/v1/rpc/{constants.RPC_STRETCH}",
+        json={"is_billed": False, "current": {"pct_above": 0.5}, "history": history},
+        status=200,
+    )
+    out = _client().market_stretch(days=20)
+    assert out["is_billed"] is False
+    assert len(out["history"]) == 20

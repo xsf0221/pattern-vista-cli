@@ -12,6 +12,7 @@ from .constants import (
     DEFAULT_TIMEOUT,
     RPC_DEVIATION,
     RPC_PATTERNS,
+    RPC_STRETCH,
     RPC_TICKER,
     RPC_VALIDATE,
     SUPABASE_ANON_KEY,
@@ -107,4 +108,16 @@ class PatternVistaClient:
         """Current deviation + recent patterns for a single symbol."""
         return self._rpc(
             RPC_TICKER, {"p_api_key": self.api_key, "p_ticker": symbol}
+        )
+
+    def market_stretch(self, days: int = 120) -> Dict[str, Any]:
+        """Market breadth: what share of the universe closed above its MA200,
+        where that sits in the recorded history, and the daily series itself.
+
+        Not tier-gated — the same reading the public /market/stretch page gives
+        away in full. The key is still sent because that is what records usage
+        against the account.
+        """
+        return self._rpc(
+            RPC_STRETCH, {"p_api_key": self.api_key, "p_days": days}
         )

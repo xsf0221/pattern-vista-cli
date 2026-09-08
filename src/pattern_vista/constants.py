@@ -30,5 +30,6 @@ RPC_VALIDATE = "cli_validate_key"
 RPC_DEVIATION = "cli_get_deviation_rankings"
 RPC_PATTERNS = "cli_get_recommended_patterns"
 RPC_TICKER = "cli_get_ticker"
+RPC_STRETCH = "cli_get_market_stretch"
 
 DEFAULT_TIMEOUT = 15  # seconds

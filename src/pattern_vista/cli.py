@@ -106,6 +106,37 @@ def deviation(ctx, direction: str, limit: int, table: bool):
     )
 
 
+# -- stretch ------------------------------------------------------------------
+@cli.command()
+@click.option("--days", default=120, show_default=True,
+              help="Sessions of history to fetch (max 1000).")
+@click.option("--table", is_flag=True, help="Human-readable instead of JSON.")
+@click.pass_context
+def stretch(ctx, days: int, table: bool):
+    """Market breadth: share of the universe closing above its own MA200."""
+    payload = _client(ctx.obj["api_key"]).market_stretch(days)
+    if not table:
+        click.echo(fmt.as_json(payload))
+        return
+
+    cur = payload.get("current") or {}
+    if not cur:
+        click.echo("No breadth snapshot available yet.")
+        return
+    pctile = payload.get("percentile")
+    click.echo(
+        f"{cur.get('snapshot_date')}  "
+        f"{fmt.pct(cur.get('pct_above'))} of {cur.get('total')} names above their MA200"
+    )
+    click.echo(f"median stretch: {fmt.pct(cur.get('median'))}")
+    if pctile is not None:
+        click.echo(f"percentile vs history: {fmt.pct(pctile)}")
+    hist = payload.get("history") or []
+    if hist:
+        click.echo(f"history: {hist[0].get('snapshot_date')} → "
+                   f"{hist[-1].get('snapshot_date')} ({len(hist)} sessions)")
+
+
 # -- patterns -----------------------------------------------------------------
 @cli.command()
 @click.option("--limit", default=20, show_default=True, help="Max rows (paid).")

@@ -4,13 +4,16 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pattern-vista"
-version = "0.1.0"
+# Declared once, in src/pattern_vista/__init__.py, and read from there by
+# hatchling. Carrying it in both places meant `pv --version` (which reads
+# __version__) could disagree with what PyPI served.
+dynamic = ["version"]
 description = "Command-line access to Pattern Vista: K-line pattern win-rates and MA200 deviation rankings, built for AI agents and humans."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9"   # the [mcp] extra itself needs >=3.10
 license = { text = "MIT" }
 authors = [{ name = "Pattern Vista" }]
-keywords = ["trading", "stocks", "technical-analysis", "patterns", "agent", "cli"]
+keywords = ["trading", "stocks", "technical-analysis", "patterns", "agent", "cli", "mcp", "model-context-protocol"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -29,9 +32,19 @@ Documentation = "https://www.pattern-vista.com/posts"
 [project.scripts]
 pv = "pattern_vista.cli:main"
 pattern-vista = "pattern_vista.cli:main"
+# Speaks MCP over stdio; needs the `mcp` extra. Kept a separate console script
+# rather than a `pv mcp` subcommand so an MCP client config can point straight
+# at it without the CLI's argument parsing in the way.
+pattern-vista-mcp = "pattern_vista.mcp_server:main"
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "responses>=0.23"]
+# The MCP SDK is an extra, not a hard dependency: most CLI users never run the
+# server, and it pulls in a whole async stack.
+mcp = ["mcp>=1.2"]
+dev = ["pytest>=7", "responses>=0.23", "mcp>=1.2"]
+
+[tool.hatch.version]
+path = "src/pattern_vista/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pattern_vista"]
