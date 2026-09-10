@@ -1,3 +1,5 @@
+<!-- mcp-name: io.github.xsf0221/pattern-vista -->
+
 # Pattern Vista CLI
 
 Command-line access to [Pattern Vista](https://www.pattern-vista.com) — K-line

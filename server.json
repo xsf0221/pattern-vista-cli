@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.xsf0221/pattern-vista",
+  "description": "End-of-day US equity data: MA200 deviation rankings, market breadth, chart-pattern win rates.",
+  "repository": {
+    "url": "https://github.com/xsf0221/pattern-vista-cli",
+    "source": "github"
+  },
+  "version": "0.2.1",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "pattern-vista",
+      "version": "0.2.1",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
