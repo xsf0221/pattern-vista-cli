@@ -1,0 +1,9 @@
+# Keep the build context to what the Dockerfile actually copies. .venv alone is
+# hundreds of MB and would be sent to the daemon on every build.
+.venv/
+dist/
+.git/
+.pytest_cache/
+__pycache__/
+*.pyc
+tests/

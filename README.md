@@ -98,6 +98,14 @@ or anything else that speaks MCP over stdio). If you would rather install it:
 pip install 'pattern-vista[mcp]'   # then use "command": "pattern-vista-mcp"
 ```
 
+Or run it in a container. `-i` is required — the transport is stdio, so without
+an attached stdin the server has nothing to read and exits straight away:
+
+```bash
+docker build -t pattern-vista-mcp .
+docker run -i --rm -e PATTERN_VISTA_API_KEY=pv_live_xxxxxxxx pattern-vista-mcp
+```
+
 ### Tools
 
 | Tool | Answers |
