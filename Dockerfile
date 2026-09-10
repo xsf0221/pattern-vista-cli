@@ -22,6 +22,11 @@ COPY src ./src
 
 RUN pip install --no-cache-dir '.[mcp]'
 
+# stdio JSON-RPC over a pipe: Python block-buffers stdout when it is not a tty,
+# so an unflushed handshake reply looks identical to a server that never
+# answered. Costs nothing here and removes a whole class of silent 60s hangs.
+ENV PYTHONUNBUFFERED=1
+
 # The API key is per-user and never baked in; pass it at run time. Without one
 # the server still starts and every tool returns an actionable error, which is
 # what lets a registry probe the tool list without credentials.
@@ -29,6 +34,11 @@ ENV PATTERN_VISTA_API_KEY=""
 
 # Drop root: this process only reads its own config and speaks HTTPS out.
 RUN useradd --create-home --uid 10001 app
+# Docker does not update HOME when USER changes — it stays whatever the base
+# image set (/root here), which the app user cannot read. Not fatal (the config
+# loader treats an unreadable dir as "no config"), but it makes Path.home()
+# point somewhere this process has no business looking.
+ENV HOME=/home/app
 USER app
 
 ENTRYPOINT ["pattern-vista-mcp"]
