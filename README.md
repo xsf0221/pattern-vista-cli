@@ -133,9 +133,11 @@ Works with both generations of the MCP Python SDK (`mcp` 1.x's `FastMCP` and
   universe closing above its own MA200, one reading per trading day, with the
   history behind it. Free for every tier — it is the same number the public
   page at <https://www.pattern-vista.com/market/stretch> publishes.
-- **Win-rate** (`hist_win_w20`) is the historical 20-trading-day hit rate of a
-  pattern type since 2025-01-01. See the methodology post at
-  <https://www.pattern-vista.com/posts/pattern-alpha-backtest>.
+- **Win-rate** (`hist_win_w20`) is the share of settled past signals of the same
+  pattern type, direction and shape that beat SPY over the following 20 trading
+  days — the same per-signal record listed at
+  <https://www.pattern-vista.com/track-record>. Null when fewer than 10 have
+  settled.
 - Past performance does not guarantee future results. Not investment advice.
 
 ## License

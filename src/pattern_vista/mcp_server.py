@@ -171,8 +171,10 @@ def recommended_patterns(limit: int = 20) -> Dict[str, Any]:
     """The latest K-line chart patterns the daily scan flagged, each carried
     with the historical win-rate of its own pattern bucket.
 
-    hist_win_w20 is the share of past occurrences of that (pattern type,
-    direction) bucket that beat SPY over the following 20 trading days — an
+    hist_win_w20 is the share of settled past signals of that (pattern type,
+    direction, shape) bucket that beat SPY over the following 20 trading days,
+    from the same per-signal record as pattern-vista.com/track-record; null
+    when fewer than 10 have settled. It is an
     aggregate property of the bucket, NOT a probability for this specific
     signal. Anything at or below 0.5 has no historical edge over simply holding
     the index, and several bullish buckets sit well below it; report the number
